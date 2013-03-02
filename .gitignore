@@ -1,0 +1,9 @@
+.settings/
+target/
+bin/
+doc/doxygen/
+doc/javadoc/
+
+.classpath
+.project
+doc/todo.txt
