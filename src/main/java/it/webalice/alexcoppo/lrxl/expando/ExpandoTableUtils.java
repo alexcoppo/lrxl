@@ -58,8 +58,8 @@ public class ExpandoTableUtils {
      * @throws SystemException
      * @throws PortalException 
      */
-    public static void create(long companyId, String className) throws PortalException, SystemException {
-        ExpandoTableLocalServiceUtil.addDefaultTable(companyId, className);
+    public static ExpandoTable create(long companyId, String className) throws PortalException, SystemException {
+        return ExpandoTableLocalServiceUtil.addDefaultTable(companyId, className);
     }
 
     /**
@@ -67,16 +67,20 @@ public class ExpandoTableUtils {
      * @throws SystemException
      * @throws PortalException 
      */
-    public static void createIfMissing(long companyId, String className) throws PortalException, SystemException {
-        if (get(companyId, className) == null)
-            ExpandoTableLocalServiceUtil.addDefaultTable(companyId, className);
+    public static ExpandoTable createIfMissing(long companyId, String className) throws PortalException, SystemException {
+        ExpandoTable et = get(companyId, className);
+        
+        if (et == null)
+            et = ExpandoTableLocalServiceUtil.addDefaultTable(companyId, className);
+        
+        return et;
     }
 
-    public static void createForced(long companyId, String className) throws PortalException, SystemException {
+    public static ExpandoTable createForced(long companyId, String className) throws PortalException, SystemException {
         ExpandoTable et = get(companyId, className);
         if (get(companyId, className) != null)
             drop(et);
-        create(companyId, className);
+        return create(companyId, className);
     }
     
     /**
