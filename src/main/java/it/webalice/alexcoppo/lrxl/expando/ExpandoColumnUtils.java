@@ -67,8 +67,8 @@ public class ExpandoColumnUtils {
      * @throws PortalException
      * @throws SystemException 
      */
-    public void create(ExpandoTable et, String columnName, int columnType) throws SystemException, PortalException {
-        ExpandoColumnLocalServiceUtil.addColumn(et.getTableId(), columnName, columnType);
+    public static ExpandoColumn create(ExpandoTable et, String columnName, int columnType) throws SystemException, PortalException {
+        return ExpandoColumnLocalServiceUtil.addColumn(et.getTableId(), columnName, columnType);
     }
     
     /**
@@ -80,10 +80,10 @@ public class ExpandoColumnUtils {
      * @throws SystemException
      * @throws PortalException 
      */
-    public void createForced(ExpandoTable et, String columnName, int columnType) throws SystemException, PortalException {
+    public static ExpandoColumn createForced(ExpandoTable et, String columnName, int columnType) throws SystemException, PortalException {
         if (exists(et, columnName))
             drop(et, columnName);
-        create(et, columnName, columnType);
+        return create(et, columnName, columnType);
     }
 
     /**
@@ -95,9 +95,13 @@ public class ExpandoColumnUtils {
      * @throws SystemException
      * @throws PortalException 
      */
-    public void createIfMissing(ExpandoTable et, String columnName, int columnType) throws SystemException, PortalException {
-        if (!exists(et, columnName))
-            create(et, columnName, columnType);
+    public static ExpandoColumn createIfMissing(ExpandoTable et, String columnName, int columnType) throws SystemException, PortalException {
+        ExpandoColumn ec = get(et, columnName);
+        
+        if (ec == null)
+            ec = create(et, columnName, columnType);
+        
+        return ec;
     }
 
     /**
@@ -107,7 +111,7 @@ public class ExpandoColumnUtils {
      * @param columnName the name of the column
      * @throws SystemException 
      */
-    public void drop(ExpandoTable et, String columnName) throws SystemException {
+    public static void drop(ExpandoTable et, String columnName) throws SystemException {
         ExpandoColumnLocalServiceUtil.deleteColumn(et.getTableId(), columnName);
     }
 
@@ -118,7 +122,7 @@ public class ExpandoColumnUtils {
      * @param columnName
      * @throws SystemException 
      */
-    public void dropSafe(ExpandoTable et, String columnName) throws SystemException {
+    public static void dropSafe(ExpandoTable et, String columnName) throws SystemException {
         if (exists(et, columnName))
             ExpandoColumnLocalServiceUtil.deleteColumn(et.getTableId(), columnName);
     }
