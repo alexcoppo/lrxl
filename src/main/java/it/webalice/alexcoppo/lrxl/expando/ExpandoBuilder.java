@@ -26,9 +26,26 @@
 */
 package it.webalice.alexcoppo.lrxl.expando;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portlet.expando.model.ExpandoColumn;
+import com.liferay.portlet.expando.model.ExpandoTable;
+
 /**
  *
  */
 public abstract class ExpandoBuilder {
+    protected ExpandoTable ensurePresent(long companyId, String className) throws PortalException, SystemException {
+        return ExpandoTableUtils.createIfMissing(companyId, className);
+    }
     
+    private int stringToLiferayColumnType(String columnType) {
+        return 0;
+    }
+
+    protected ExpandoColumn ensurePresent(ExpandoTable et, String columnName, String columnType) throws SystemException, PortalException {
+        return ExpandoColumnUtils.createIfMissing(et, columnName, stringToLiferayColumnType(columnType));
+    }
+
+    public abstract void process(long companyId) throws SystemException, PortalException;
 }
