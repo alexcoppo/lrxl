@@ -26,15 +26,83 @@
 */
 package it.webalice.alexcoppo.lrxl.expando;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portlet.expando.model.ExpandoTable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+//TODO: Farlo funzionare soltanto per una tabella, visto che tanto sara'
+//inizializzato da Spring e pertanto ce ne potranno essere tanti?
+
 /**
  *
  */
 public class ExpandoBuilderJSON extends ExpandoBuilder {
-    /**
-     *
-     * @param jSchema
-     */
-    public void process(String jSchema) {
+    private String json;
+
+    public String getJson() {
+        return json;
+    }
+
+    public void setJson(String json) {
+        this.json = json;
+    }
+
+    @Override
+    public void process(long companyId) throws SystemException, PortalException {
+        try {
+            JSONArray commands = new JSONArray(json);
+
+            for (int index = 0; ; index++) {
+                JSONObject tableDesc = commands.getJSONObject(index);
+                if (tableDesc == null) break;
+                processTable(companyId, tableDesc);
+            }
+        } catch (JSONException je) {
+            throw new SystemException("", je);
+        }
+    }
+    
+    private void processTable(long companyId, JSONObject tableDesc) throws SystemException, PortalException, JSONException {
+        String className = tableDesc.optString("name");
         
+        ExpandoTable et = ensurePresent(companyId, className);
+        
+        JSONArray columnsDesc = tableDesc.getJSONArray("columns");
+        for (int index = 0; ; index++) {
+            JSONObject columnDesc = columnsDesc.getJSONObject(index);
+            if (columnDesc == null) break;
+            processColumn(et, columnDesc);
+        }
+    }
+    
+    private void processColumn(ExpandoTable et, JSONObject columnDesc) throws JSONException, SystemException, PortalException {
+        String columnName = columnDesc.getString("name");
+        String columnType = columnDesc.getString("type");
+
+        ensurePresent(et, columnName, columnType);
     }
 }
+
+/*
+ * [
+ *  { "name" : "qqq.pluto",
+ *      columns :
+ *      [
+ *          { "name" : "a", "type" : "STRING" },
+ *          { "name" : "b", "type" : "LONG" },
+ *          { "name" : "c", "type" : "STRING" }
+ *      ]
+ *   },
+ *  { "name" : "qqq.pippo",
+ *      columns :
+ *      [
+ *          { "name" : "a1", "type" : "STRING" },
+ *          { "name" : "b2", "type" : "LONG" },
+ *          { "name" : "c1", "type" : "STRING" }
+ *      ]
+ *   }
+ * ]
+ */
