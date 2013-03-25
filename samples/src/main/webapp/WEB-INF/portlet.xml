@@ -36,7 +36,7 @@
     <portlet>
         <portlet-name>sample-md</portlet-name>
         <display-name>Message Digest</display-name>
-        <portlet-class>it.webalice.alexcoppo.lrxl_samples.samplemd.SamplePortlet</portlet-class>
+        <portlet-class>it.webalice.alexcoppo.lrxl_samples.samplemd.MessageDigestPortlet</portlet-class>
         <expiration-cache>0</expiration-cache>
         <supports>
             <mime-type>text/html</mime-type>
