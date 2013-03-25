@@ -7,20 +7,74 @@
 <form>
     <label for="mdEnginesList">Message Digest Algoritm</label>
     <select name="mdEnginesList" id="mdEnginesList">
-        <option value="md2">MD2</option>
-        <option value="md5">MD5</option>
     </select>
     <label for="text">Text to hash</label>
     <input type="text" name="txtToHash" id="txtToHash"/>
     <hr/>
-    <button type="button" name="btnHash" id="btnHash"/>
+    <button type="button" name="btnHash" id="btnHash">Hash</button>
     <hr/>
-    <label for="txtHashResult">Hash result</label>
-    <input type="text" name="txtHashResult" id="txtHashResult"/>
+    Hash result:<div id="txtHashResult">--------</div>
 </form>
 
 <script type="text/javascript">
 $(document).ready(function() {
-    console.debug('pluto');
+    console.debug("---------------------");
+    
+    var fillDigestEnginesCombo = function(digestList) {
+        var anchor = $("#mdEnginesList");
+        
+        for (index = 0; index < digestList.length; index++) {
+            var item = digestList[index];
+
+            $("<option>").
+                attr("value", item.name).
+                attr("id", item.name).
+                html(item.name).
+                appendTo(anchor);
+        }
+    };
+    
+    var ajaxErrorHandler = function(xhr, ajaxOptions, thrownError) {
+        console.debug("ajaxErrorHandler");
+        console.debug(xhr.status);
+        console.debug(thrownError);
+    };
+    
+    var loadKnownEngines = function() {
+        //console.debug('loadKnownEngines');
+        $.ajax(
+            '${listKnownEnginesUrl}',
+            {
+                method: "GET", dataType: "json",
+                data: {
+                    command: "listKnownEngines"
+                },
+                success: function(data) {
+                    fillDigestEnginesCombo(data);
+                },
+                error: ajaxErrorHandler                  
+            }
+        );
+    };
+
+    $("#btnHash").click(function() {
+        $.ajax(
+            '${computeHashUrl}',
+            {
+                method: "GET", dataType: "json",
+                data: {
+                    command : "computeHash",
+                    engine  : "MD2",
+                    message : $("#txtToHash").val()
+                },
+                success: function(data) {
+                    $("#txtHashResult").html(data.digest);
+                },
+                error: ajaxErrorHandler                  
+            }
+        );
+    });
+    
+    loadKnownEngines();
 });
 </script>
