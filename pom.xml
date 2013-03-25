@@ -1,18 +1,23 @@
+<?xml version="1.0"?>
+
 <project
     xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>it.webalice.alexcoppo</groupId>
-    <artifactId>lrxl</artifactId>
+    <artifactId>lrxl_main</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <name>lrxl</name>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <liferay.version>6.1.1</liferay.version>
-    </properties>
-    <build>
+    <packaging>pom</packaging>
+    <name>LifeRay eXtesion Layer [MAIN]</name>
+    
+	<modules>
+        <module>lib</module>
+        <module>samples</module>
+	</modules>
+    
+	<build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -23,33 +28,39 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <outputDirectory>${LIFERAY_HOME}</outputDirectory>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-    <profiles>
-    </profiles>
-    <dependencies>
+    
+	<dependencies>
         <dependency>
             <groupId>com.liferay.portal</groupId>
             <artifactId>portal-service</artifactId>
-            <version>${liferay.version}</version>
+            <version>${LIFERAY_VERSION}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.liferay.portal</groupId>
             <artifactId>util-bridges</artifactId>
-            <version>${liferay.version}</version>
+            <version>${LIFERAY_VERSION}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.liferay.portal</groupId>
             <artifactId>util-taglib</artifactId>
-            <version>${liferay.version}</version>
+            <version>${LIFERAY_VERSION}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.liferay.portal</groupId>
             <artifactId>util-java</artifactId>
-            <version>${liferay.version}</version>
+            <version>${LIFERAY_VERSION}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -59,11 +70,10 @@
             <version>2.0</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
-            <groupId>net.sf</groupId>
-            <artifactId>jautl</artifactId>
-            <version>0.35.1-SNAPSHOT</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
         </dependency>
 
         <dependency>
@@ -76,6 +86,12 @@
             <artifactId>log4j</artifactId>
             <version>1.2.14</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf</groupId>
+            <artifactId>jautl</artifactId>
+            <version>0.35.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
