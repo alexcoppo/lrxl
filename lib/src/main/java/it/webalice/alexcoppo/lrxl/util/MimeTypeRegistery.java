@@ -26,8 +26,8 @@ public class MimeTypeRegistery {
         return result;
     }
 
-    public static String extentionToMime(String extension) {
-        String result = e2m.get(extension);
-        return result;
+    public static String[] extentionToMime(String extension) {
+        //String result = e2m.get(extension);
+        return new String[0];
     }
 }
