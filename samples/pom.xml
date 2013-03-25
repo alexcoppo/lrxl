@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    
+	<modelVersion>4.0.0</modelVersion>
+    
+	<parent>
+        <artifactId>lrxl_main</artifactId>
+        <groupId>it.webalice.alexcoppo</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    
+	<groupId>it.webalice.alexcoppo</groupId>
+    <artifactId>lrxl_samples</artifactId>
+    <packaging>war</packaging>
+    <name>LRXL Samples</name>
+    <version>0.0.1-SNAPSHOT</version>
+    
+	<build>
+        <finalName>lrxl_samples</finalName>		
+    </build>
+    
+	<dependencies>
+        <dependency>
+            <groupId>it.webalice.alexcoppo</groupId>
+            <artifactId>lrxl</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>
