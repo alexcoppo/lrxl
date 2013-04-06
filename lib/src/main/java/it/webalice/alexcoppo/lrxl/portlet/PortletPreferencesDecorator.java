@@ -45,11 +45,11 @@ import net.sf.jautl.text.StringMarshaller;
  * private static String FOO_TAG = "foo";
  * 
  * public void storeFoo(long foo) {
- *     setProp(FOO_TAG, getMarshaller().marshall(foo));
+ *     setProperty(FOO_TAG, getMarshaller().marshall(foo));
  * }
  * 
  * public long loadFoo(long defaultFoo) {
- *     return getMarshaller().asLong(getProp(FOO_TAG, null), defaultFoo);
+ *     return getMarshaller().asLong(getProperty(FOO_TAG, null), defaultFoo);
  * }
  * </code>
  */
