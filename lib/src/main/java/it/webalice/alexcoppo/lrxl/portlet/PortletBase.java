@@ -93,12 +93,12 @@ public abstract class PortletBase extends GenericPortlet implements ResourceServ
         }
     }
 
-    private void initialize() throws PortletException {
+    private void initialize() {
         jspDefaults = (JspDefaults)ClassUtils.getAnnotation(this, JspDefaults.class);
         if (jspDefaults == null) {
             String msg = "Missing JspDefaults annotation";
             _log.error(msg);
-            throw new PortletException(msg);
+            throw new PortletInitializatinException(msg);
         }
 
         if (actionHandlers == null) {
@@ -108,15 +108,18 @@ public abstract class PortletBase extends GenericPortlet implements ResourceServ
             if (actionHandlers.isEmpty() && resourceHandlers.isEmpty()) {
                 String msg = "No handlers found";
                 _log.error(msg);
-                throw new PortletException(msg);
+                throw new PortletInitializatinException(msg);
             }
         }
     }
     
     @Override
+    public void init() {
+        initialize();
+    }
+    
+    @Override
     public void doView(RenderRequest request, RenderResponse response) throws PortletException, IOException {
-        if (jspDefaults == null) initialize();
-
         defaultInjections(request, response);
         
         PortletMode mode = doViewAux(request, response);
@@ -126,8 +129,6 @@ public abstract class PortletBase extends GenericPortlet implements ResourceServ
     
     @Override
     public void doEdit(RenderRequest request, RenderResponse response) throws PortletException, IOException {
-        if (jspDefaults == null) initialize();
-
         defaultInjections(request, response);
         
         PortletMode mode = doEditAux(request, response);
@@ -142,9 +143,6 @@ public abstract class PortletBase extends GenericPortlet implements ResourceServ
     }
     
     private void defaultInjections(RenderRequest request, RenderResponse response) {
-        InjectNamespace n = (InjectNamespace)ClassUtils.getAnnotation(this, InjectNamespace.class);
-        if (n != null) request.setAttribute(n.value(), response.getNamespace());
-        
         actionHandlers.inject(request, response);
         resourceHandlers.inject(request, response);
     }
