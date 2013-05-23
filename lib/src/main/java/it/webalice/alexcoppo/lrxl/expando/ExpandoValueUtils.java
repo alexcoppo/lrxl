@@ -26,9 +26,79 @@
 */
 package it.webalice.alexcoppo.lrxl.expando;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portlet.expando.model.ExpandoColumn;
+import com.liferay.portlet.expando.model.ExpandoTable;
+import com.liferay.portlet.expando.model.ExpandoValue;
+import com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil;
+
 /**
- *
+ * Utility class for ExpandoValue-s.
  */
 public class ExpandoValueUtils {
+    /**
+     * Insert a new value.
+     * 
+     * @param et the expando table
+     * @param ec the expando colum
+     * @param oid the id of the Liferay object to enrich
+     * @param value the value to insert
+     * @return
+     * @throws PortalException
+     * @throws SystemException 
+     */
+    public static ExpandoValue insert(ExpandoTable tbl, ExpandoColumn ec, long oid, String value) throws PortalException, SystemException {
+        ExpandoValue ev = ExpandoValueLocalServiceUtil.addValue(
+            tbl.getCompanyId(),
+            tbl.getClassName(),
+            tbl.getName(),
+            ec.getName(),
+            oid,
+            value);
+        return ev;
+    }
     
+    /**
+     * 
+     * @param et the expando table
+     * @param ec the expando colum
+     * @param oid the id of the Liferay object
+     * @return the specific ExpandoValue
+     * @throws SystemException 
+     */
+    public static ExpandoValue fetch(ExpandoTable tbl, ExpandoColumn ec, long oid) throws SystemException {
+        ExpandoValue ev = ExpandoValueLocalServiceUtil.getValue(
+            tbl.getTableId(),
+            ec.getColumnId(),
+            oid
+            );
+
+        return ev;
+    }
+    
+    /**
+     * Update a value.
+     * 
+     * @param et the expando table
+     * @param ec the expando colum
+     * @param oid the id of the Liferay object to enrich
+     * @param ev the value to update
+     * @throws SystemException 
+     */
+    public static void update(ExpandoTable tbl, ExpandoColumn ec, long oid, ExpandoValue ev) throws SystemException {
+        ev.setColumn(ec);
+        ev.setPrimaryKey(oid);
+        ExpandoValueLocalServiceUtil.updateExpandoValue(ev);
+    }
+    
+    /**
+     * Delete a given ExpandoValue
+     * 
+     * @param ev the ExpandoValue to delete
+     * @throws SystemException 
+     */
+    public static void delete(ExpandoValue ev) throws SystemException {
+        ExpandoValueLocalServiceUtil.deleteValue(ev);
+    }
 }

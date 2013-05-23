@@ -29,6 +29,7 @@ package it.webalice.alexcoppo.lrxl.expando;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portlet.expando.model.ExpandoColumn;
+import com.liferay.portlet.expando.model.ExpandoColumnConstants;
 import com.liferay.portlet.expando.model.ExpandoTable;
 
 /**
@@ -39,7 +40,10 @@ public abstract class ExpandoBuilder {
         return ExpandoTableUtils.createIfMissing(companyId, className);
     }
     
-    private int stringToLiferayColumnType(String columnType) {
+    protected int stringToLiferayColumnType(String columnType) {
+        if (columnType.equalsIgnoreCase("STRING"))
+             return ExpandoColumnConstants.STRING;
+        
         return 0;
     }
 

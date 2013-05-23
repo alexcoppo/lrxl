@@ -31,33 +31,12 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portlet.expando.model.ExpandoColumn;
 import com.liferay.portlet.expando.model.ExpandoTable;
 import com.liferay.portlet.expando.service.ExpandoColumnLocalServiceUtil;
+import com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil;
 
 /**
- *
+ * Utility class for ExpandoColumn-s.
  */
 public class ExpandoColumnUtils {
-    /**
-     * 
-     * @param et the expando table
-     * @param columnName
-     * @return
-     * @throws SystemException 
-     */
-    public static boolean exists(ExpandoTable et, String columnName) throws SystemException {
-        return ExpandoColumnLocalServiceUtil.getColumn(et.getCompanyId(), et.getClassName(), et.getName(), columnName) != null;
-    }
-    
-    /**
-     * 
-     * @param et the expando table
-     * @param columnName
-     * @return
-     * @throws SystemException 
-     */
-    public static ExpandoColumn get(ExpandoTable et, String columnName) throws SystemException {
-        return ExpandoColumnLocalServiceUtil.getColumn(et.getCompanyId(), et.getClassName(), et.getName(), columnName);
-    }
-
     /**
      * Create a column.
      *
@@ -70,7 +49,31 @@ public class ExpandoColumnUtils {
     public static ExpandoColumn create(ExpandoTable et, String columnName, int columnType) throws SystemException, PortalException {
         return ExpandoColumnLocalServiceUtil.addColumn(et.getTableId(), columnName, columnType);
     }
+
+    /**
+     * Check whether a column exists.
+     * 
+     * @param et the expando table
+     * @param columnName the name of the column
+     * @return
+     * @throws SystemException 
+     */
+    public static boolean exists(ExpandoTable et, String columnName) throws SystemException {
+        return ExpandoColumnLocalServiceUtil.getColumn(et.getCompanyId(), et.getClassName(), et.getName(), columnName) != null;
+    }
     
+    /**
+     * Get a column.
+     * 
+     * @param et the expando table
+     * @param columnName the name of the column
+     * @return
+     * @throws SystemException 
+     */
+    public static ExpandoColumn get(ExpandoTable et, String columnName) throws SystemException {
+        return ExpandoColumnLocalServiceUtil.getColumn(et.getCompanyId(), et.getClassName(), et.getName(), columnName);
+    }
+
     /**
      * Create a colum, if it already exists, drop it first.
      * 
@@ -105,6 +108,20 @@ public class ExpandoColumnUtils {
     }
 
     /**
+     * Delete all values of a column.
+     * 
+     * @param et the expando table
+     * @param columnName the name of the column
+     * @throws SystemException 
+     */
+    public static void deleteAllValues(ExpandoTable et, String columnName) throws SystemException {
+        ExpandoColumn ec = get(et, columnName);
+        
+        if (ec != null)
+            ExpandoValueLocalServiceUtil.deleteColumnValues(ec.getColumnId());
+    }
+    
+    /**
      * Drop a column.
      * 
      * @param et the expando table
@@ -112,18 +129,19 @@ public class ExpandoColumnUtils {
      * @throws SystemException 
      */
     public static void drop(ExpandoTable et, String columnName) throws SystemException {
+        deleteAllValues(et, columnName);
         ExpandoColumnLocalServiceUtil.deleteColumn(et.getTableId(), columnName);
     }
 
     /**
      * Drop a column if exists.
      * 
-     * @param et
-     * @param columnName
+     * @param et the expando table
+     * @param columnName the name of the column
      * @throws SystemException 
      */
     public static void dropSafe(ExpandoTable et, String columnName) throws SystemException {
         if (exists(et, columnName))
-            ExpandoColumnLocalServiceUtil.deleteColumn(et.getTableId(), columnName);
+            drop(et, columnName);
     }
 }

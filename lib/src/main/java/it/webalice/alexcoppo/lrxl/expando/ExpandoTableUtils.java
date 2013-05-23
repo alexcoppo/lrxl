@@ -31,15 +31,18 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portlet.expando.NoSuchTableException;
 import com.liferay.portlet.expando.model.ExpandoTable;
 import com.liferay.portlet.expando.service.ExpandoTableLocalServiceUtil;
+import com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil;
 
 /**
- * 
+ * Utility class for ExpandoTable-s.
  */
 public class ExpandoTableUtils {
     /**
      * Check whether an expando table exists.
      * 
-     * @return the result of the operation
+     * @param companyId the id of the company
+     * @param className the name of the class to enrich
+     * @return whether the table exists
      * @throws PortalException
      * @throws SystemException 
      */
@@ -55,6 +58,9 @@ public class ExpandoTableUtils {
     /**
      * Create a new expando table.
      * 
+     * @param companyId the id of the company
+     * @param className the name of the class to enrich
+     * @return the result of the operation
      * @throws SystemException
      * @throws PortalException 
      */
@@ -63,7 +69,11 @@ public class ExpandoTableUtils {
     }
 
     /**
+     * Create a table only if missing.
      * 
+     * @param companyId the id of the company
+     * @param className the name of the class to enrich
+     * @return the result of the operation
      * @throws SystemException
      * @throws PortalException 
      */
@@ -76,6 +86,15 @@ public class ExpandoTableUtils {
         return et;
     }
 
+    /**
+     * If the table already exists, drop it; then create it.
+     * 
+     * @param companyId the id of the company
+     * @param className the name of the class to enrich
+     * @return the result of the operation
+     * @throws PortalException
+     * @throws SystemException 
+     */
     public static ExpandoTable createForced(long companyId, String className) throws PortalException, SystemException {
         ExpandoTable et = get(companyId, className);
         if (get(companyId, className) != null)
@@ -86,6 +105,8 @@ public class ExpandoTableUtils {
     /**
      * Gets an expando table.
      * 
+     * @param companyId the id of the company
+     * @param className the name of the class to enrich
      * @return the result of the operation
      * @throws PortalException
      * @throws SystemException 
@@ -104,7 +125,8 @@ public class ExpandoTableUtils {
      * @param et the ExpandoTable to drop
      * @throws SystemException 
      */
-    public static void drop(ExpandoTable et) throws SystemException {
+    public static void drop(ExpandoTable et) throws SystemException, PortalException {
+        deleteAllValues(et.getCompanyId(), et.getName());
         ExpandoTableLocalServiceUtil.deleteExpandoTable(et);
     }
 
@@ -119,6 +141,20 @@ public class ExpandoTableUtils {
     public static void dropSafe(long companyId, String className) throws SystemException, PortalException {
         ExpandoTable et = get(companyId, className);
         if (et != null)
-            ExpandoTableLocalServiceUtil.deleteExpandoTable(et);
+            drop(et);
+    }
+    
+    /**
+     * Delete all values associated with a table.
+     * 
+     * @param companyId the company id
+     * @param className the name of the class
+     * @throws PortalException
+     * @throws SystemException 
+     */
+    public static void deleteAllValues(long companyId, String className) throws PortalException, SystemException {
+        ExpandoTable et = get(companyId, className);
+        if (et != null)
+            ExpandoValueLocalServiceUtil.deleteTableValues(et.getTableId());
     }
 }

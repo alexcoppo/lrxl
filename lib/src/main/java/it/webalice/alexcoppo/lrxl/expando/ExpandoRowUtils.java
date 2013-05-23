@@ -26,9 +26,96 @@
 */
 package it.webalice.alexcoppo.lrxl.expando;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portlet.expando.model.ExpandoRow;
+import com.liferay.portlet.expando.model.ExpandoTable;
+import com.liferay.portlet.expando.service.ExpandoRowLocalServiceUtil;
+import com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil;
+
 /**
- *
+ * Utility class for ExpandoRow-s.
  */
 public class ExpandoRowUtils {
+    /**
+     * Add a row to an expando table.
+     * 
+     * @param tbl the ExpandoTable
+     * @param oid the id of the Liferay object to enrich
+     * @return
+     * @throws PortalException
+     * @throws SystemException 
+     */
+    public static ExpandoRow insertRow(ExpandoTable tbl, long oid) throws PortalException, SystemException {
+        return ExpandoRowLocalServiceUtil.addRow(tbl.getTableId(), oid);
+    }
     
+    /**
+     * Get, inserting if missing, a row.
+     * 
+     * @param tbl the ExpandoTable
+     * @param oid the id of the Liferay object to enrich
+     * @return
+     * @throws PortalException
+     * @throws SystemException 
+     */
+    public static ExpandoRow insertGetRow(ExpandoTable tbl, long oid) throws PortalException, SystemException {
+        ExpandoRow er = getRow(tbl, oid);
+        if (er == null)
+            er = ExpandoRowLocalServiceUtil.addRow(tbl.getTableId(), oid);
+        
+        return er;
+    }
+    
+    /**
+     *  Get a row.
+     * 
+     * @param tbl the ExpandoTable
+     * @param oid the id of the Liferay object to enrich
+     * @return
+     * @throws PortalException
+     * @throws SystemException 
+     */
+    public static ExpandoRow getRow(ExpandoTable tbl, long oid) throws PortalException, SystemException {
+        try {
+            return ExpandoRowLocalServiceUtil.getRow(tbl.getTableId(), oid);
+        } catch (PortalException pe) {
+            return null;
+        }
+    }
+    
+    /**
+     * Check whether a row exists.
+     * 
+     * @param tbl the ExpandoTable
+     * @param oid the id of the Liferay object to enrich
+     * @return the result of the check
+     * @throws PortalException
+     * @throws SystemException 
+     */
+    public static boolean existsRow(ExpandoTable tbl, long oid) throws PortalException, SystemException {
+        return getRow(tbl, oid) != null;
+    }
+
+    /**
+     * Delete all values of the given object
+     * 
+     * @param oid the id of the Liferay object
+     * @throws SystemException 
+     */
+    public static void deleteAllValues(long oid) throws SystemException {
+        ExpandoValueLocalServiceUtil.deleteRowValues(oid);
+    }
+    
+    /**
+     * Delete a row.
+     * 
+     * @param tbl the ExpandoTable
+     * @param oid the id of the Liferay object
+     * @throws PortalException
+     * @throws SystemException 
+     */
+    public static void deleteRow(ExpandoTable tbl, long oid) throws PortalException, SystemException {
+        ExpandoRowLocalServiceUtil.deleteRow(tbl.getTableId(), oid);
+    }
 }

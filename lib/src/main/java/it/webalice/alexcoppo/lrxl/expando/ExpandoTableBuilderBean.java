@@ -29,66 +29,52 @@ package it.webalice.alexcoppo.lrxl.expando;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portlet.expando.model.ExpandoTable;
+import java.util.List;
 
 /**
  * ExpandoTableBuilder configured as bean, to be used inside a Spring
  * configuration file.
  */
 public class ExpandoTableBuilderBean extends ExpandoBuilder {
+    private String className;
+    private List<String> columnDefs;
+    
     public class ColumnInfo {
     }
 
-    private String tableName;
-
-    public String getTableName() {
-        return tableName;
+    public String getClassName() {
+        return className;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public List<String> getColumnDefs() {
+        return columnDefs;
+    }
+
+    public void setColumnDefs(List<String> columnDefs) {
+        this.columnDefs = columnDefs;
     }
     
     @Override
     public void process(long companyId) throws SystemException, PortalException {
-        ExpandoTable et = ensurePresent(companyId, tableName);
-        
-        //TODO NYI
-        //foreach column
-        //create column
+        ExpandoTable et = ensurePresent(companyId, className);
+
+        for (String columDef : columnDefs) {
+            String items[] = columDef.split(":");
+            
+            String columnName = items[0];
+            String columnType = (items.length > 1) ? items[1] : "STRING";
+
+            int liferayColumnType = stringToLiferayColumnType(columnType);
+            
+            if (liferayColumnType != 0) {
+                ExpandoColumnUtils.createIfMissing(et, columnName, liferayColumnType);
+            } else {
+                throw new PortalException(String.format("Unrecognized type '%s' for column '%s'", columnType, columnName));
+            }
+        }
     }
 }
-
-/*
- * <bean id="pippo" class="it.webalice.alexcoppo.lrxl.expando.ExpandoTableBuilderBean">
- *    <properties>
- *        <property name="tableName" value="com.liferay.QQQ"/>
- *        <property name="columns">
- *            <list>
- *              <bean class="it.webalice.alexcoppo.lrxl.expando.ExpandoTableBuilderBean.ColumnInfo>
- *                  <properties>
- *                      <property name="a" type="STRING/>
- *                  </properties>
- *              </bean>
- *            </list>
- *        </propery>
- *    </properties>
- * </bean>
- */
-
-/*
- * <bean id="pippo" class="it.webalice.alexcoppo.lrxl.expando.ExpandoTableBuilderJSON">
- *    <properties>
- *        <property name="JSON"><CDATA[[
- *        [
- *          { "name" : "com.liferay.portal.model.Organization",
- *             "columns" : [
- *                { "name" : "cod_servizio",   "type" : "STRING" },
- *                { "name" : "cod_codnegozio", "type" : "STRING" },
- *                { "name" : "org_type",       "type" : "STRING" }
- *             ]
- *          }
- *        ]
- *        ]]></property>
- *    </properties>
- * </bean>
- */
