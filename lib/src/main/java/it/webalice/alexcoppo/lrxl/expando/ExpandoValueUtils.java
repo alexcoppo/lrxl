@@ -23,7 +23,7 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl.expando;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -44,39 +44,56 @@ public class ExpandoValueUtils {
      * @param ec the expando colum
      * @param oid the id of the Liferay object to enrich
      * @param value the value to insert
-     * @return
+     * @return the inserted value
      * @throws PortalException
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static ExpandoValue insert(ExpandoTable tbl, ExpandoColumn ec, long oid, String value) throws PortalException, SystemException {
-        ExpandoValue ev = ExpandoValueLocalServiceUtil.addValue(
-            tbl.getCompanyId(),
-            tbl.getClassName(),
-            tbl.getName(),
-            ec.getName(),
-            oid,
-            value);
+		ExpandoValue ev = ExpandoValueLocalServiceUtil.addValue(
+			tbl.getCompanyId(), tbl.getClassName(), tbl.getName(),
+			ec.getName(), oid, value);
+		return ev;
+    }
+
+    /**
+     * Insert a new value or update it if already existing.
+     * 
+     * @param et the expando table
+     * @param ec the expando colum
+     * @param oid the id of the Liferay object to enrich
+     * @param value the value to insert
+     * @return the inserted/updated value
+     * @throws SystemException
+     * @throws PortalException 
+     */
+    public static ExpandoValue insertOrUpdate(ExpandoTable et, ExpandoColumn ec, long oid, String value) throws SystemException, PortalException {
+        ExpandoValue ev = fetch(et, ec, oid);
+        
+        if (ev == null)
+            ev = insert(et, ec, oid, value);
+        else {
+            ev.setString(value);
+            update(et, ec, oid, ev);
+        }
+        
         return ev;
     }
     
     /**
      * 
+     * 
      * @param et the expando table
      * @param ec the expando colum
      * @param oid the id of the Liferay object
      * @return the specific ExpandoValue
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static ExpandoValue fetch(ExpandoTable tbl, ExpandoColumn ec, long oid) throws SystemException {
-        ExpandoValue ev = ExpandoValueLocalServiceUtil.getValue(
-            tbl.getTableId(),
-            ec.getColumnId(),
-            oid
-            );
+	ExpandoValue ev = ExpandoValueLocalServiceUtil.getValue(tbl.getTableId(), ec.getColumnId(), oid);
 
-        return ev;
+	return ev;
     }
-    
+
     /**
      * Update a value.
      * 
@@ -84,21 +101,21 @@ public class ExpandoValueUtils {
      * @param ec the expando colum
      * @param oid the id of the Liferay object to enrich
      * @param ev the value to update
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static void update(ExpandoTable tbl, ExpandoColumn ec, long oid, ExpandoValue ev) throws SystemException {
         ev.setColumn(ec);
-        ev.setPrimaryKey(oid);
+        ev.setClassPK(oid);
         ExpandoValueLocalServiceUtil.updateExpandoValue(ev);
     }
-    
+
     /**
      * Delete a given ExpandoValue
      * 
      * @param ev the ExpandoValue to delete
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static void delete(ExpandoValue ev) throws SystemException {
-        ExpandoValueLocalServiceUtil.deleteValue(ev);
+		ExpandoValueLocalServiceUtil.deleteValue(ev);
     }
 }

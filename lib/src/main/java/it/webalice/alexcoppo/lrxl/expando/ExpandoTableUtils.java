@@ -23,7 +23,7 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl.expando;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -44,15 +44,15 @@ public class ExpandoTableUtils {
      * @param className the name of the class to enrich
      * @return whether the table exists
      * @throws PortalException
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static boolean exists(long companyId, String className) throws PortalException, SystemException {
-        try {
-            ExpandoTableLocalServiceUtil.getDefaultTable(companyId, className);
-            return true;
-        } catch (NoSuchTableException ex) {
-            return false;
-        }
+		try {
+		    ExpandoTableLocalServiceUtil.getDefaultTable(companyId, className);
+		    return true;
+		} catch (NoSuchTableException ex) {
+		    return false;
+		}
     }
 
     /**
@@ -62,10 +62,10 @@ public class ExpandoTableUtils {
      * @param className the name of the class to enrich
      * @return the result of the operation
      * @throws SystemException
-     * @throws PortalException 
+     * @throws PortalException
      */
     public static ExpandoTable create(long companyId, String className) throws PortalException, SystemException {
-        return ExpandoTableLocalServiceUtil.addDefaultTable(companyId, className);
+		return ExpandoTableLocalServiceUtil.addDefaultTable(companyId, className);
     }
 
     /**
@@ -75,15 +75,15 @@ public class ExpandoTableUtils {
      * @param className the name of the class to enrich
      * @return the result of the operation
      * @throws SystemException
-     * @throws PortalException 
+     * @throws PortalException
      */
     public static ExpandoTable createIfMissing(long companyId, String className) throws PortalException, SystemException {
-        ExpandoTable et = get(companyId, className);
-        
-        if (et == null)
-            et = ExpandoTableLocalServiceUtil.addDefaultTable(companyId, className);
-        
-        return et;
+		ExpandoTable et = get(companyId, className);
+	
+		if (et == null)
+		    et = ExpandoTableLocalServiceUtil.addDefaultTable(companyId, className);
+	
+		return et;
     }
 
     /**
@@ -93,15 +93,17 @@ public class ExpandoTableUtils {
      * @param className the name of the class to enrich
      * @return the result of the operation
      * @throws PortalException
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static ExpandoTable createForced(long companyId, String className) throws PortalException, SystemException {
-        ExpandoTable et = get(companyId, className);
-        if (get(companyId, className) != null)
-            drop(et);
-        return create(companyId, className);
+		ExpandoTable et = get(companyId, className);
+
+		if (get(companyId, className) != null)
+		    drop(et);
+		
+		return create(companyId, className);
     }
-    
+
     /**
      * Gets an expando table.
      * 
@@ -109,25 +111,25 @@ public class ExpandoTableUtils {
      * @param className the name of the class to enrich
      * @return the result of the operation
      * @throws PortalException
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static ExpandoTable get(long companyId, String className) throws PortalException, SystemException {
-        try {
-            return ExpandoTableLocalServiceUtil.getDefaultTable(companyId, className);
-        } catch (NoSuchTableException ex) {
-            return null;
-        }
+		try {
+		    return ExpandoTableLocalServiceUtil.getDefaultTable(companyId, className);
+		} catch (NoSuchTableException ex) {
+		    return null;
+		}
     }
 
     /**
      * Drop an existing expando table.
      * 
      * @param et the ExpandoTable to drop
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static void drop(ExpandoTable et) throws SystemException, PortalException {
-        deleteAllValues(et.getCompanyId(), et.getName());
-        ExpandoTableLocalServiceUtil.deleteExpandoTable(et);
+		deleteAllValues(et.getCompanyId(), et.getName());
+		ExpandoTableLocalServiceUtil.deleteExpandoTable(et);
     }
 
     /**
@@ -136,25 +138,27 @@ public class ExpandoTableUtils {
      * @param companyId the company id
      * @param className the name of the class
      * @throws SystemException
-     * @throws PortalException 
+     * @throws PortalException
      */
     public static void dropSafe(long companyId, String className) throws SystemException, PortalException {
-        ExpandoTable et = get(companyId, className);
-        if (et != null)
-            drop(et);
+		ExpandoTable et = get(companyId, className);
+
+		if (et != null)
+		    drop(et);
     }
-    
+
     /**
      * Delete all values associated with a table.
      * 
      * @param companyId the company id
      * @param className the name of the class
      * @throws PortalException
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static void deleteAllValues(long companyId, String className) throws PortalException, SystemException {
-        ExpandoTable et = get(companyId, className);
-        if (et != null)
-            ExpandoValueLocalServiceUtil.deleteTableValues(et.getTableId());
+		ExpandoTable et = get(companyId, className);
+		
+		if (et != null)
+		    ExpandoValueLocalServiceUtil.deleteTableValues(et.getTableId());
     }
 }

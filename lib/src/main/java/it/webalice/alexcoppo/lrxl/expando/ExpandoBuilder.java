@@ -23,33 +23,21 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl.expando;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portlet.expando.model.ExpandoColumn;
-import com.liferay.portlet.expando.model.ExpandoColumnConstants;
-import com.liferay.portlet.expando.model.ExpandoTable;
 
 /**
  *
  */
-public abstract class ExpandoBuilder {
-    protected ExpandoTable ensurePresent(long companyId, String className) throws PortalException, SystemException {
-        return ExpandoTableUtils.createIfMissing(companyId, className);
-    }
-    
-    protected int stringToLiferayColumnType(String columnType) {
-        if (columnType.equalsIgnoreCase("STRING"))
-             return ExpandoColumnConstants.STRING;
-        
-        return 0;
-    }
-
-    protected ExpandoColumn ensurePresent(ExpandoTable et, String columnName, String columnType) throws SystemException, PortalException {
-        return ExpandoColumnUtils.createIfMissing(et, columnName, stringToLiferayColumnType(columnType));
-    }
-
-    public abstract void process(long companyId) throws SystemException, PortalException;
+public interface ExpandoBuilder {
+    /**
+     * 
+     * @param companyId
+     * @throws SystemException
+     * @throws PortalException
+     */
+    void process(long companyId) throws SystemException, PortalException;
 }

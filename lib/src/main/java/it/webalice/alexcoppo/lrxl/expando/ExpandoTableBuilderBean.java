@@ -23,58 +23,76 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl.expando;
+
+import java.util.List;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portlet.expando.model.ExpandoTable;
-import java.util.List;
 
 /**
  * ExpandoTableBuilder configured as bean, to be used inside a Spring
  * configuration file.
  */
-public class ExpandoTableBuilderBean extends ExpandoBuilder {
+public class ExpandoTableBuilderBean implements ExpandoBuilder {
     private String className;
     private List<String> columnDefs;
-    
-    public class ColumnInfo {
-    }
 
+    /**
+     * 
+     * 
+     * @return
+     */
     public String getClassName() {
-        return className;
+		return className;
     }
 
+    /**
+     * 
+     * 
+     * @param className
+     */
     public void setClassName(String className) {
-        this.className = className;
+		this.className = className;
     }
 
+    /**
+     * 
+     * 
+     * @return
+     */
     public List<String> getColumnDefs() {
-        return columnDefs;
+		return columnDefs;
     }
 
+    /**
+     * 
+     * 
+     * @param columnDefs
+     */
     public void setColumnDefs(List<String> columnDefs) {
-        this.columnDefs = columnDefs;
+		this.columnDefs = columnDefs;
     }
-    
+
     @Override
     public void process(long companyId) throws SystemException, PortalException {
-        ExpandoTable et = ensurePresent(companyId, className);
-
-        for (String columDef : columnDefs) {
-            String items[] = columDef.split(":");
-            
-            String columnName = items[0];
-            String columnType = (items.length > 1) ? items[1] : "STRING";
-
-            int liferayColumnType = stringToLiferayColumnType(columnType);
-            
-            if (liferayColumnType != 0) {
-                ExpandoColumnUtils.createIfMissing(et, columnName, liferayColumnType);
-            } else {
-                throw new PortalException(String.format("Unrecognized type '%s' for column '%s'", columnType, columnName));
-            }
-        }
+		ExpandoTable et = ExpandoTableUtils.createIfMissing(companyId, className);
+	
+		for (String columDef : columnDefs) {
+		    String items[] = columDef.split(":");
+	
+		    String columnName = items[0];
+		    String columnType = (items.length > 1) ? items[1] : "STRING";
+		    int liferayColumnType = ExpandoColumnTypeUtils .typeLabelToInt(columnType);
+	
+		    if (liferayColumnType != 0) {
+		    	ExpandoColumnUtils.createIfMissing(et, columnName, liferayColumnType);
+		    } else {
+			throw new PortalException(
+				String.format("Unrecognized type '%s' for column '%s'", columnType,columnName));
+		    }
+		}
     }
 }

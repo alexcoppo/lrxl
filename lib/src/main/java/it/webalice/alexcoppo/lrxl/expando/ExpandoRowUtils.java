@@ -23,7 +23,7 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl.expando;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -44,12 +44,12 @@ public class ExpandoRowUtils {
      * @param oid the id of the Liferay object to enrich
      * @return
      * @throws PortalException
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static ExpandoRow insertRow(ExpandoTable tbl, long oid) throws PortalException, SystemException {
-        return ExpandoRowLocalServiceUtil.addRow(tbl.getTableId(), oid);
+    	return ExpandoRowLocalServiceUtil.addRow(tbl.getTableId(), oid);
     }
-    
+
     /**
      * Get, inserting if missing, a row.
      * 
@@ -57,33 +57,34 @@ public class ExpandoRowUtils {
      * @param oid the id of the Liferay object to enrich
      * @return
      * @throws PortalException
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static ExpandoRow insertGetRow(ExpandoTable tbl, long oid) throws PortalException, SystemException {
-        ExpandoRow er = getRow(tbl, oid);
-        if (er == null)
-            er = ExpandoRowLocalServiceUtil.addRow(tbl.getTableId(), oid);
-        
-        return er;
+		ExpandoRow er = getRow(tbl, oid);
+
+		if (er == null)
+		    er = ExpandoRowLocalServiceUtil.addRow(tbl.getTableId(), oid);
+	
+		return er;
     }
-    
+
     /**
-     *  Get a row.
+     * Get a row.
      * 
      * @param tbl the ExpandoTable
      * @param oid the id of the Liferay object to enrich
      * @return
      * @throws PortalException
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static ExpandoRow getRow(ExpandoTable tbl, long oid) throws PortalException, SystemException {
-        try {
-            return ExpandoRowLocalServiceUtil.getRow(tbl.getTableId(), oid);
-        } catch (PortalException pe) {
-            return null;
-        }
+		try {
+		    return ExpandoRowLocalServiceUtil.getRow(tbl.getTableId(), oid);
+		} catch (PortalException pe) {
+		    return null;
+		}
     }
-    
+
     /**
      * Check whether a row exists.
      * 
@@ -91,31 +92,31 @@ public class ExpandoRowUtils {
      * @param oid the id of the Liferay object to enrich
      * @return the result of the check
      * @throws PortalException
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static boolean existsRow(ExpandoTable tbl, long oid) throws PortalException, SystemException {
-        return getRow(tbl, oid) != null;
+    	return getRow(tbl, oid) != null;
     }
 
     /**
      * Delete all values of the given object
      * 
      * @param oid the id of the Liferay object
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static void deleteAllValues(long oid) throws SystemException {
-        ExpandoValueLocalServiceUtil.deleteRowValues(oid);
+		ExpandoValueLocalServiceUtil.deleteRowValues(oid);
     }
-    
+
     /**
      * Delete a row.
      * 
      * @param tbl the ExpandoTable
      * @param oid the id of the Liferay object
      * @throws PortalException
-     * @throws SystemException 
+     * @throws SystemException
      */
     public static void deleteRow(ExpandoTable tbl, long oid) throws PortalException, SystemException {
-        ExpandoRowLocalServiceUtil.deleteRow(tbl.getTableId(), oid);
+    	ExpandoRowLocalServiceUtil.deleteRow(tbl.getTableId(), oid);
     }
 }
