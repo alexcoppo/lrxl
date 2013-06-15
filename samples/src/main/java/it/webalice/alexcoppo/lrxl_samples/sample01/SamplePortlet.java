@@ -23,44 +23,42 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl_samples.sample01;
 
-import it.webalice.alexcoppo.lrxl.portlet.PortletBase;
-import java.io.IOException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import it.webalice.alexcoppo.lrxl.portlet.ActionMapping;
-import it.webalice.alexcoppo.lrxl.portlet.InjectNamespace;
 import it.webalice.alexcoppo.lrxl.portlet.JspDefaults;
+import it.webalice.alexcoppo.lrxl.portlet.PortletBase;
 import it.webalice.alexcoppo.lrxl.portlet.ResourceMapping;
+import java.io.IOException;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 @JspDefaults(path = "/WEB-INF/jsp/sample01/")
-@InjectNamespace
 public class SamplePortlet extends PortletBase {
     private static Log _log = LogFactoryUtil.getLog(SamplePortlet.class);
 
-    @ActionMapping(command="onAction1")
+    @ActionMapping(command = "onAction1")
     public void onCommand1(ActionRequest request, ActionResponse response) throws PortletException, IOException {
         _log.info("Inside action 1");
     }
-    
-    @ActionMapping(command="onAction2")
+
+    @ActionMapping(command = "onAction2")
     public void onCommand2(ActionRequest request, ActionResponse response) throws PortletException, IOException {
         _log.info("Inside action 2");
     }
-    
-    @ResourceMapping(command="onResource1")
+
+    @ResourceMapping(command = "onResource1")
     public void onResource1(ResourceRequest request, ResourceResponse response) throws PortletException, IOException {
         _log.info("Inside resource 1");
     }
-    
-    @ResourceMapping(command="onResource2")
+
+    @ResourceMapping(command = "onResource2")
     public void onResource2(ResourceRequest request, ResourceResponse response) throws PortletException, IOException {
         _log.info("Inside resource 1");
     }

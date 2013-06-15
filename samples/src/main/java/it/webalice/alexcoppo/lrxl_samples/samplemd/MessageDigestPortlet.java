@@ -23,16 +23,13 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl_samples.samplemd;
 
-import it.webalice.alexcoppo.lrxl.portlet.PortletBase;
-import java.io.IOException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import it.webalice.alexcoppo.lrxl.portlet.InjectNamespace;
 import it.webalice.alexcoppo.lrxl.portlet.JspDefaults;
+import it.webalice.alexcoppo.lrxl.portlet.PortletBase;
 import it.webalice.alexcoppo.lrxl.portlet.ResourceMapping;
+import java.io.IOException;
 import java.util.List;
 import javax.portlet.PortletException;
 import javax.portlet.ResourceRequest;
@@ -43,18 +40,20 @@ import net.sf.jautl.md.DigestEngineFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 @JspDefaults(path = "/WEB-INF/jsp/samplemd/")
-@InjectNamespace
 public class MessageDigestPortlet extends PortletBase {
     private static Log _log = LogFactoryUtil.getLog(MessageDigestPortlet.class);
 
-    @ResourceMapping(command="listKnownEngines")
+    @ResourceMapping(command = "listKnownEngines")
     public void listKnownEngines(ResourceRequest request, ResourceResponse response) throws PortletException, IOException {
         List<String> engines = DigestEngineFactory.enumerate();
 
         JSONArray arr = new JSONArray();
         int index = 0;
+
         for (String engine : engines) {
             try {
                 JSONObject eng = new JSONObject();
@@ -64,25 +63,22 @@ public class MessageDigestPortlet extends PortletBase {
                 _log.error("JSON Error", ex);
                 throw new PortletException(ex);
             }
-            
         }
-        
+
         returnJSON(response, arr.toString());
     }
-    
-    @ResourceMapping(command="computeHash")
+
+    @ResourceMapping(command = "computeHash")
     public void computeHash(ResourceRequest request, ResourceResponse response) throws PortletException, IOException {
         String engineName = request.getParameter("engine");
         String message = request.getParameter("message");
-        
+
         DigestEngine de = DigestEngineFactory.create(engineName);
         de.initiate();
         de.add(message);
         de.terminate();
-        
-        String jsonString = new JSONObjectBuilder().
-                put("digest", de.getAsHex()).
-                toString();
+
+        String jsonString = new JSONObjectBuilder().put("digest", de.getAsHex()).toString();
 
         returnJSON(response, jsonString);
     }

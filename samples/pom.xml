@@ -13,11 +13,9 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     
-	<groupId>it.webalice.alexcoppo</groupId>
     <artifactId>lrxl_samples</artifactId>
     <packaging>war</packaging>
     <name>LRXL Samples</name>
-    <version>0.0.1-SNAPSHOT</version>
     
 	<build>
         <finalName>lrxl_samples</finalName>		

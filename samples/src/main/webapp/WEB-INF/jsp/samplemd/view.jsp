@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 
 <portlet:defineObjects />
@@ -6,22 +7,20 @@
 
 <form>
     <label for="mdEnginesList">Message Digest Algoritm</label>
-    <select name="mdEnginesList" id="mdEnginesList">
+    <select name="mdEnginesList" id="mdEnginesList<portlet:namespace>">
     </select>
     <label for="text">Text to hash</label>
     <input type="text" name="txtToHash" id="txtToHash"/>
     <hr/>
-    <button type="button" name="btnHash" id="btnHash">Hash</button>
+    <button type="button" name="btnHash" id="btnHash<portlet:namespace>">Hash</button>
     <hr/>
-    Hash result:<div id="txtHashResult">--------</div>
+    Hash result:<div id="txtHashResult<portlet:namespace>">--------</div>
 </form>
 
 <script type="text/javascript">
 $(document).ready(function() {
-    console.debug("---------------------");
-    
     var fillDigestEnginesCombo = function(digestList) {
-        var anchor = $("#mdEnginesList");
+        var anchor = $("#mdEnginesList<portlet:namespace>");
         
         for (index = 0; index < digestList.length; index++) {
             var item = digestList[index];
@@ -33,44 +32,51 @@ $(document).ready(function() {
                 appendTo(anchor);
         }
     };
-    
-    var ajaxErrorHandler = function(xhr, ajaxOptions, thrownError) {
-        console.debug("ajaxErrorHandler");
-        console.debug(xhr.status);
-        console.debug(thrownError);
+
+    var ajaxJsonGet = function(url, params, onReceiveHandler, blocking) {
+        var settings = {
+            method: "GET",
+            dataType: "json",
+            data : params,
+            cache : false,
+            success : onReceiveHandler,
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.debug("ajaxJsonGet.errorHandler");
+                console.debug(xhr.status);
+                console.debug(thrownError);
+            }
+        };
+
+        if (blocking === undefined || blocking === false)
+            settings.async = true;
+        else
+            settings.async = false;
+
+        $.ajax(url, settings);
     };
     
     var loadKnownEngines = function() {
-        //console.debug('loadKnownEngines');
-        $.ajax(
-            '${listKnownEnginesUrl}',
+        ajaxJsonGet(
+            "${listKnownEnginesUrl}", 
             {
-                method: "GET", dataType: "json",
-                data: {
-                    command: "listKnownEngines"
-                },
-                success: function(data) {
-                    fillDigestEnginesCombo(data);
-                },
-                error: ajaxErrorHandler                  
+                command: "listKnownEngines"
+            },
+            function(data) {
+                fillDigestEnginesCombo(data);
             }
         );
     };
 
-    $("#btnHash").click(function() {
-        $.ajax(
-            '${computeHashUrl}',
+    $("#btnHash<portlet:namespace>").click(function() {
+        ajaxJsonGet(
+            "${computeHashUrl}", 
             {
-                method: "GET", dataType: "json",
-                data: {
-                    command : "computeHash",
-                    engine  : "MD2",
-                    message : $("#txtToHash").val()
-                },
-                success: function(data) {
-                    $("#txtHashResult").html(data.digest);
-                },
-                error: ajaxErrorHandler                  
+                command : "computeHash",
+                engine  : $("#mdEnginesList<portlet:namespace>").val(),
+                message : $("#txtToHash<portlet:namespace>").val()
+            },
+            function(data) {
+                $("#txtHashResult").html(data.digest);
             }
         );
     });
