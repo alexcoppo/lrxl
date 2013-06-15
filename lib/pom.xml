@@ -13,9 +13,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     
-	<groupId>it.webalice.alexcoppo</groupId>
     <artifactId>lrxl</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>LRXL Library</name>
     
