@@ -26,20 +26,29 @@
  */
 package it.webalice.alexcoppo.lrxl.portlet;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.portlet.RenderRequest;
 
 /**
  *
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD })
-public @interface ActionMapping {
-    String command();
+public class RenderParameter {
+    private String tag;
+    private String value;
 
-    String jspSymbolPrefix() default "";
+    public RenderParameter(String tag) {
+        this.tag = tag;
+    }
 
-    String jspSymbolSuffix() default "Url";
+    public String getValue() {
+        return value;
+    }
+
+    public RenderParameter setValue(String value) {
+        this.value = value;
+        return this;
+    }
+
+    public void sendToRenderPhase(RenderRequest request) {
+        request.setAttribute(tag, value);
+    }
 }

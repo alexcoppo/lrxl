@@ -35,11 +35,7 @@ import java.lang.annotation.Target;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD })
-public @interface ActionMapping {
-    String command();
-
-    String jspSymbolPrefix() default "";
-
-    String jspSymbolSuffix() default "Url";
+@Target({ ElementType.TYPE })
+public @interface RenderParameterAnn {
+    String tag();
 }

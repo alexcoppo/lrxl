@@ -23,11 +23,9 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl.portlet;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import it.webalice.alexcoppo.lrxl.portlet.impl.ActionHandlersLookupTable;
 import it.webalice.alexcoppo.lrxl.portlet.impl.ResourceHandlersLookupTable;
 import java.io.IOException;
@@ -45,13 +43,14 @@ import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceServingPortlet;
 import net.sf.jautl.utility.reflection.ClassUtils;
 import org.apache.commons.io.IOUtils;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 /**
  *
  */
 public abstract class PortletBase extends GenericPortlet implements ResourceServingPortlet {
     private static Log _log = LogFactoryUtil.getLog(PortletBase.class);
-    
     private ActionHandlersLookupTable actionHandlers;
     private ResourceHandlersLookupTable resourceHandlers;
     private JspDefaults jspDefaults;
@@ -62,21 +61,21 @@ public abstract class PortletBase extends GenericPortlet implements ResourceServ
         Method method = actionHandlers.lookup(command);
         invokeHandler(command, method, request, response);
     }
-    
+
     @Override
     public void serveResource(ResourceRequest request, ResourceResponse response) throws PortletException, IOException {
         String command = request.getParameter(ActionRequest.ACTION_NAME);
         Method method = resourceHandlers.lookup(command);
         invokeHandler(command, method, request, response);
     }
-    
+
     private void invokeHandler(String command, Method method, Object arg0, Object arg1) throws PortletException, IOException {
         if (method == null) {
             String msg = String.format("No target for command '%s'", command);
             _log.error(msg);
             throw new PortletException(msg);
         }
-        
+
         String errorMessage = "Error invoking '%s' handler";
 
         try {
@@ -94,7 +93,7 @@ public abstract class PortletBase extends GenericPortlet implements ResourceServ
     }
 
     private void initialize() {
-        jspDefaults = (JspDefaults)ClassUtils.getAnnotation(this, JspDefaults.class);
+        jspDefaults = (JspDefaults) ClassUtils.getAnnotation(this, JspDefaults.class);
         if (jspDefaults == null) {
             String msg = "Missing JspDefaults annotation";
             _log.error(msg);
@@ -104,57 +103,57 @@ public abstract class PortletBase extends GenericPortlet implements ResourceServ
         if (actionHandlers == null) {
             actionHandlers = new ActionHandlersLookupTable(this);
             resourceHandlers = new ResourceHandlersLookupTable(this);
-            
+
             if (actionHandlers.isEmpty() && resourceHandlers.isEmpty()) {
-                String msg = "No handlers found";
-                _log.error(msg);
-                throw new PortletInitializatinException(msg);
+            String msg = "No handlers found";
+            _log.error(msg);
+            throw new PortletInitializatinException(msg);
             }
         }
     }
-    
+
     @Override
     public void init() {
         initialize();
     }
-    
+
     @Override
     public void doView(RenderRequest request, RenderResponse response) throws PortletException, IOException {
         defaultInjections(request, response);
-        
+
         PortletMode mode = doViewAux(request, response);
 
         dispatch(mode, request, response);
     }
-    
+
     @Override
     public void doEdit(RenderRequest request, RenderResponse response) throws PortletException, IOException {
         defaultInjections(request, response);
-        
+
         PortletMode mode = doEditAux(request, response);
 
         dispatch(mode, request, response);
     }
-    
+
     private void dispatch(PortletMode mode, RenderRequest request, RenderResponse response) throws PortletException, IOException {
         String jspFullName = mode.createJspName(jspDefaults);
 
         getPortletContext().getRequestDispatcher(jspFullName).include(request, response);
     }
-    
+
     private void defaultInjections(RenderRequest request, RenderResponse response) {
         actionHandlers.inject(request, response);
         resourceHandlers.inject(request, response);
     }
-    
+
     protected PortletMode doViewAux(RenderRequest request, RenderResponse response) throws PortletException, IOException {
-        return PortletMode.view;
+    	return PortletMode.view;
     }
-    
+
     protected PortletMode doEditAux(RenderRequest request, RenderResponse response) throws PortletException, IOException {
-        return PortletMode.edit;
+    	return PortletMode.edit;
     }
-    
+
     protected void returnJSON(ResourceResponse response, String jsonString) throws IOException {
         response.setContentLength(jsonString.length());
         response.setContentType("application/json");

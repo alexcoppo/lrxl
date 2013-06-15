@@ -23,12 +23,13 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl.portlet;
 
 /**
  *
  */
+@SuppressWarnings({ "serial" })
 public class PortletInitializatinException extends RuntimeException {
     public PortletInitializatinException() {
     }
@@ -40,7 +41,7 @@ public class PortletInitializatinException extends RuntimeException {
     public PortletInitializatinException(Throwable t) {
         super(t);
     }
-    
+
     public PortletInitializatinException(String message, Throwable t) {
         super(message, t);
     }

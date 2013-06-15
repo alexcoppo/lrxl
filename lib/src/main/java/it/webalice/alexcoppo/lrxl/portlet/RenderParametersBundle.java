@@ -26,20 +26,43 @@
  */
 package it.webalice.alexcoppo.lrxl.portlet;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.portlet.RenderRequest;
 
 /**
  *
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD })
-public @interface ActionMapping {
-    String command();
+public class RenderParametersBundle {
+    private Map<String, String> parameters;
 
-    String jspSymbolPrefix() default "";
+    protected RenderParametersBundle() {
+        parameters = new HashMap<String, String>();
+    }
 
-    String jspSymbolSuffix() default "Url";
+    protected void register(String tag) {
+        parameters.put(tag, null);
+    }
+
+    public boolean exists(String tag) {
+        return parameters.containsKey(tag);
+    }
+
+    public void set(String tag, String value) {
+        if (exists(tag))
+            parameters.put(tag, value);
+    }
+
+    public String get(String tag) {
+        if (exists(tag))
+            return parameters.get(tag);
+        else
+            return null;
+    }
+
+    public void sendToRenderPhase(RenderRequest request) {
+        for (String tag : parameters.keySet())
+            request.setAttribute(tag, parameters.get(tag));
+    }
 }

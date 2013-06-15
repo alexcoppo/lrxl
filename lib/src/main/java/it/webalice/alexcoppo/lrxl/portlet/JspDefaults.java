@@ -23,7 +23,7 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl.portlet;
 
 import java.lang.annotation.ElementType;
@@ -35,10 +35,13 @@ import java.lang.annotation.Target;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 public @interface JspDefaults {
     String path() default "/WEB-INF/jsp/";
+
     String editName() default "edit";
+
     String viewName() default "view";
+
     String helpName() default "help";
 }
