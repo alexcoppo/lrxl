@@ -51,7 +51,8 @@ public class ExpandoValueUtils {
     public static ExpandoValue insert(ExpandoTable tbl, ExpandoColumn ec, long oid, String value) throws PortalException, SystemException {
 		ExpandoValue ev = ExpandoValueLocalServiceUtil.addValue(
 			tbl.getCompanyId(), tbl.getClassName(), tbl.getName(),
-			ec.getName(), oid, value);
+			ec.getName(), oid, value
+        );
 		return ev;
     }
 
@@ -89,9 +90,9 @@ public class ExpandoValueUtils {
      * @throws SystemException
      */
     public static ExpandoValue fetch(ExpandoTable tbl, ExpandoColumn ec, long oid) throws SystemException {
-	ExpandoValue ev = ExpandoValueLocalServiceUtil.getValue(tbl.getTableId(), ec.getColumnId(), oid);
+        ExpandoValue ev = ExpandoValueLocalServiceUtil.getValue(tbl.getTableId(), ec.getColumnId(), oid);
 
-	return ev;
+        return ev;
     }
 
     /**
