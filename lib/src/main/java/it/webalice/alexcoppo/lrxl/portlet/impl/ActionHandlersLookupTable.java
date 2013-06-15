@@ -23,7 +23,7 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl.portlet.impl;
 
 import it.webalice.alexcoppo.lrxl.portlet.ActionMapping;
@@ -40,9 +40,9 @@ import net.sf.jautl.utility.reflection.MethodUtils;
  */
 public class ActionHandlersLookupTable extends HandlersLookupTable {
     public ActionHandlersLookupTable(Object obj) {
-        super(obj.getClass());
+    	super(obj.getClass());
     }
-    
+
     @Override
     protected String match(Method method) {
         if (!checkMethodSignature(method, ActionRequest.class, ActionResponse.class))
@@ -65,9 +65,9 @@ public class ActionHandlersLookupTable extends HandlersLookupTable {
 
     private void inject(ActionMapping am, RenderRequest request, RenderResponse response) {
         BaseURL url = response.createActionURL();
-        
+
         url.setParameter(ActionRequest.ACTION_NAME, am.command());
-        
+
         request.setAttribute(ActionMappingUtils.getDecoratedName(am), url);
     }
 }

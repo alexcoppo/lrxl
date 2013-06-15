@@ -23,7 +23,7 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl.portlet.impl;
 
 import it.webalice.alexcoppo.lrxl.portlet.ResourceMapping;
@@ -43,33 +43,33 @@ public class ResourceHandlersLookupTable extends HandlersLookupTable {
     public ResourceHandlersLookupTable(Object obj) {
         super(obj.getClass());
     }
-    
+
     @Override
     public String match(Method method) {
         if (!checkMethodSignature(method, ResourceRequest.class, ResourceResponse.class))
-            return null;
+    	    return null;
 
         if (!MethodUtils.hasAnnotation(method, ResourceMapping.class))
             return null;
 
         ResourceMapping map = (ResourceMapping)method.getAnnotation(ResourceMapping.class);
-        
+
         return map.command();
     }
 
     public void inject(RenderRequest request, RenderResponse response) {
         for (String name : handlers.keySet()) {
             Method method = handlers.get(name);
-            ResourceMapping rm = (ResourceMapping)MethodUtils.getAnnotation(method, ResourceMapping.class);
+                ResourceMapping rm = (ResourceMapping)MethodUtils.getAnnotation(method, ResourceMapping.class);
             inject(rm, request, response);
         }
     }
 
     private void inject(ResourceMapping rm, RenderRequest request, RenderResponse response) {
         BaseURL url = response.createResourceURL();
-        
+
         url.setParameter(ActionRequest.ACTION_NAME, rm.command());
-        
+
         request.setAttribute(ResourceMappingUtils.getDecoratedName(rm), url);
     }
 }

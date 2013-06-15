@@ -23,7 +23,7 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 package it.webalice.alexcoppo.lrxl.portlet.impl;
 
 import java.lang.reflect.Method;
@@ -37,29 +37,29 @@ import javax.portlet.RenderResponse;
  */
 public abstract class HandlersLookupTable {
     protected Map<String, Method> handlers;
-    
+
     protected HandlersLookupTable(Class clazz) {
         handlers = new HashMap<String, Method>();
-        
+
         Method methods[] = clazz.getMethods();
-        
+
         for (Method method : methods) {
             String tag = match(method);
             if (tag != null)
                 handlers.put(tag, method);
         }
     }
-    
+
     public boolean isEmpty() {
         return handlers.isEmpty();
     }
-    
+
     public Method lookup(String tag) {
         return handlers.get(tag);
     }
-    
+
     protected abstract String match(Method method);
-    
+
     public abstract void inject(RenderRequest request, RenderResponse response);
 
     protected static boolean checkMethodSignature(Method method, Class class0, Class class1) {
